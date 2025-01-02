@@ -2,21 +2,25 @@
 """This is the base model class for AirBnB"""
 from sqlalchemy.ext.declarative import declarative_base
 import uuid
-import models
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime
+import models
 
 
-Base = declarative_base()
+if models.storage_tp == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
     """This class will defines all common attributes/methods
     for other classes
     """
-    id = Column(String(60), unique=True, nullable=False, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
-    updated_at = Column(DateTime, nullable=False, default=(datetime.utcnow()))
+    if models.storage_tp == "db":
+        id = Column(String(60), unique=True, nullable=False, primary_key=True)
+        created_at = Column(DateTime, nullable=False, default=(datetime.now()))
+        updated_at = Column(DateTime, nullable=False, default=(datetime.now()))
 
     def __init__(self, *args, **kwargs):
         """Instantiation of base model class
